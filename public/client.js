@@ -5,9 +5,5 @@ $(function () {
         console.log("toggle");
     });
 
-    $('#blink').click(function () {
-        io.emit('blink');
-        console.log("blink");
-    });
 
 });
