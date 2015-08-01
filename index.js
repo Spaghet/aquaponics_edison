@@ -1,23 +1,11 @@
 var socketio = require('socket.io');
-var io;
+var io = require('./server.js');
 var mraa = require('./mraa.js');
 var http = require('http');
 var path = require('path');
 var fs = require('fs');
 var mime = require('mime');
 var cache = {};
-var currentDate = new Date();
-
-//toggle Led once every 10 seconds
-/*
-var timerLed = function (currentDate) {
-    if (currentDate.getSeconds() % 10 === 0) {
-        mraa.toggle();
-        console.log("toggled");
-    }else{ console.log("not 10 seconds");}
-    setTimeout(timerLed(currentDate), 1000);
-}
- */
 
 //sends 404 not found response
 function send404(response) {
@@ -72,18 +60,5 @@ server.listen(80, function () {
 });
 
 
-var ioServer = function (server) {
-    io = socketio.listen(server); //run the socket.io server on top of the http server
-    io.sockets.on('connection', function (socket) {
-        console.log("socket io connection")
-        socket.on('toggle', function () {
-            console.log("socket io toggle");
-            mraa.toggle();
-        });
-    });
+io.listen(server);
 
-
-
-};
-ioServer(server);
-mraa.feed();

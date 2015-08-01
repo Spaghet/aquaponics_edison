@@ -1,2 +1,2 @@
-A:\Documents\2Projects\edison\node\obj\Debug\NodejsApp1.njsprojResolveAssemblyReference.cache
-A:\Documents\2Projects\edison\node\bin\Microsoft.NodejsTools.WebRole.dll
+C:\Users\XAMPP\Documents\git\aquaponics_edison\obj\Debug\NodejsApp1.njsprojResolveAssemblyReference.cache
+C:\Users\XAMPP\Documents\git\aquaponics_edison\bin\Microsoft.NodejsTools.WebRole.dll

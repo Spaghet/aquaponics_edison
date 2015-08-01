@@ -5,5 +5,9 @@ $(function () {
         console.log("toggle");
     });
 
+    io.on('waterTemp', function (waterTemp) { 
+        $("#waterTemp").html("Temperature: " + waterTemp);
+    })
+
 
 });
