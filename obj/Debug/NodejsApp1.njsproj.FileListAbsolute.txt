@@ -1,2 +1,0 @@
-C:\Users\XAMPP\Documents\git\aquaponics_edison\obj\Debug\NodejsApp1.njsprojResolveAssemblyReference.cache
-C:\Users\XAMPP\Documents\git\aquaponics_edison\bin\Microsoft.NodejsTools.WebRole.dll
