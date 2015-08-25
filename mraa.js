@@ -1,36 +1,41 @@
 var m = require('mraa'); //require mraa
 console.log(m.getVersion());
 
-var hour = 8; var hour2 = 17;
-var minute = 0; var minute2 = 0;
-var second = 0; var second2 = 0;
-
+var sunrise = new Date();
+var sunset = new Date();
 //get pin 13
 var waterTempPin = new m.Aio(0); 
 var feeder = new m.Gpio(12);
-var led = new m.Gpio(13); 
+var ledPin = new m.Gpio(13); 
 var sw1 = new m.Gpio(6);
 var wet = new m.Gpio(11);
+var pumpPin = new m.Gpio(7);
 
 //set direction
 sw1.dir(m.DIR_IN);
-led.dir(m.DIR_OUT); 
+ledPin.dir(m.DIR_OUT); 
 feeder.dir(m.DIR_OUT);
 wet.dir(m.DIR_IN);
+pumpPin.dir(m.DIR_OUT);
 
 var analogValueFloat = waterTempPin.readFloat();
 var ledState = true; //led state bool
 
-//toggles pin13 H/L state
-var toggle = function () {
-    
-    led.write(ledState ? 1 : 0);
-    ledState = !ledState;
 
+var led = {
+    on: function () { ledPin.write(1); },
+    off: function () { ledPin.write(0); },
+    equinox: function () {
+        setInterval(function () { led.write(ledState ? 1:0); ledState = !ledState; }, 43200000);
+    },
+    summer: summer,
+    winter: winter,
 };
 
+
+
 //feed the fish yo
-var feed = function ()
+function feed()
 {
     var sw = sw1.read();  
     if (sw) {
@@ -42,21 +47,8 @@ var feed = function ()
     }
 }
 
-//on/off of the led based on time
-var timerLed = function () {
-    var currentDate = new Date();
-    if (currentDate.getSeconds() == second && currentDate.getMinutes() == minute && currentDate.getHours() == hour ) {
-        mraa.toggle();
-        console.log("Time to toggle");
-        hour = hour2;
-        minute = minute2;
-        second = second2;
-    }
-    setTimeout(timerLed, 1000, currentDate);
-}
-
 //return water temperature
-var waterTemp = function () {
+function waterTemp() {
     analogValueFloat = waterTempPin.readFloat(); //read the pin value as a float
     var v = (analogValueFloat * 5); //voltage
     var r = (10 * v) / (5 - v); //resistance
@@ -113,7 +105,7 @@ function Am2321(bus, address, bufsize) {
         return temperature / 10;
     }
 }
-var tempTest = function (){
+function tempTest(){
     var sensor = new Am2321(6, 0x5C, 8);
     sensor.wakeupSensor();
     sensor.sendCommand();
@@ -125,10 +117,47 @@ var tempTest = function (){
     return [temperature, humidity];
 }
 
+var continueLoop = true;
+//timerLed
+function timerLed(sunrise, sunset) {
+    var currentDate = new Date();
+    var isDay = true;
+    
+    if (isDay && currentDate.getHours() === sunset.getHours() && currentDate.getMinutes() === sunset.getMinutes()) { 
+        ledPin.write(0);
+    }
+    if (!isDay && currentDate.getHours() === sunrise.getHours() && currentDate.getMinutes() === sunrise.getMinutes()) {
+        ledPin.write(1);
+    }
+    
+    if(continueLoop){ setTimeout(timerLed, 10000, sunrise, sunset);}
 
+}
+
+function summer() {
+    continueLoop = false;
+    setTimeout(null, 10010);
+    continueLoop = true;
+    sunrise.setHours(4, 26);
+    sunset.setHours(19, 1);
+    timerLed(sunrise, sunset);
+}
+
+function winter() {
+    continueLoop = false;
+    setTimeout(null, 10010);
+    continueLoop = true;
+    sunrise.setHours(6,47);
+    sunset.setHours(16,32);
+    timerLed(sunrise, sunset);
+}
+var isPump = true;
+function pump(){
+    pumpPin.write(isPump ? 1:0);
+}
 //export functions
-module.exports.toggle = toggle;
 module.exports.feed = feed;
-module.exports.timerLed = timerLed;
+module.exports.led = led;
 module.exports.waterTemp = waterTemp;
 module.exports.tempTest = tempTest;
+module.exports.pump = pump;

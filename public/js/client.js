@@ -1,70 +1,6 @@
 $(function () {
     var cache = [];
-    var graph = function (data, id, name) {
-        $(id).highcharts({
-            chart: {
-                zoomType: 'x'
-            },
-            title: {
-                text: name
-            },
-            
-            xAxis: {
-                type: 'datetime'
-            },
-            yAxis: {
-                title: {
-                    text: name
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            plotOptions: {
-                area: {
-                    fillColor: {
-                        linearGradient: {
-                            x1: 0,
-                            y1: 0,
-                            x2: 0,
-                            y2: 1
-                        },
- /*                       stops: [
-                            [0, Highcharts.getOptions().colors[0]],
-                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                        ]
-  */
-                    },
-                    marker: {
-                        radius: 2
-                    },
-                    lineWidth: 1,
-                    states: {
-                        hover: {
-                            lineWidth: 1
-                        }
-                    },
-                    threshold: null
-                }
-            },
-            
-            series: [{
-                    type: 'area',
-                    name: name,
-                    data: data
-                }]
-        });
-    };
-
-    $('#toggle').click(function () {
-        io.emit('toggle');
-        console.log("toggle");
-    });
-
-    $.getJSON('http://www.highcharts.com/samples/data/jsonp.php?filename=usdeur.json&callback=?', function (data) {
-        console.log(data[0]);
-    });
-    
+ 
 
 
     io.on('waterTemp', function (waterTemp) {
@@ -86,4 +22,73 @@ $(function () {
         $('.hum').html('Humidity: ' + tempHum[1] + '\%');
     });
     
+
+
 });
+
+function setting() {
+    var frm = document.forms["set"];
+    var led = frm.elements["LED"].selectedIndex;
+    var feed = frm.elements["feed"].selectedIndex;
+    var pump = frm.elements["pump"].selectedIndex;
+    led = frm.elements["LED"].options[led].value;
+    feed = frm.elements["feed"].options[feed].value;
+    pump = frm.elements["pump"].options[pump].value;
+    io.emit('control',   {LED: led, feed: feed, pump: pump});
+}
+
+function graph(data, id, name) {
+    $(id).highcharts({
+        chart: {
+            zoomType: 'x'
+        },
+        title: {
+            text: name
+        },
+        
+        xAxis: {
+            type: 'datetime'
+        },
+        yAxis: {
+            title: {
+                text: name
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+ /*                       stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+  */
+                },
+                marker: {
+                    radius: 2
+                },
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: null
+            }
+        },
+        
+        series: [{
+                type: 'area',
+                name: name,
+                data: data
+            }]
+    });
+}

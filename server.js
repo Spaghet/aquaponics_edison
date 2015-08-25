@@ -14,6 +14,19 @@ var ioServer = function (server) {
             mraa.feed();
         });
         setInterval(state, 10000, socket);
+        socket.on('control', function (data) {
+            console.log(data);
+            switch (data.LED) {
+                case 'on': mraa.led.on(); break;
+                case 'equinox': mraa.led.equinox(); break;
+                case 'summer': mraa.led.summer(); break;
+                case 'winter': mraa.led.winter(); break;
+                case 'off': mraa.led.off(); break;
+            }
+            setInterval(mraa.feed(), parseInt(data.feed) * 3600000);
+            setInterval(mraa.pump(), parseInt(data.pump) * 60000);
+
+        });
     }
     );
 };        

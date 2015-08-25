@@ -68,28 +68,38 @@
 							<input type="checkbox" name="cam-sw" checked>
 						</div>
 					</div>
-					<div class="panel panel-default" id="setting">
-						<div class="panel-heading">Setting</div>
-						<div class="panel-body">
-							<h3>LED<small>現在の様子</small></h3>
-							<select name="example">
-								<option value="on">常時ON</option>
-								<option value="shunbun">春分、秋分（12時間）</option>
-								<option value="geshi">夏至（14.5時間）</option>
-								<option value="toji">冬至（9.5時間）</option>
-								<option value="toji">常時OFF</option>
-							</select>
-							<br>
-							<h3>えさやり<small>次のエサやりまで</small></h3>
-							<p><input type="number" name="example" min="-5" max="5" value="1">時間おき</p>
-							<br>
-							<h3>ポンプの満ち引き<small>現在、次の満ち引き</small></h3>
-							<p><input type="number" name="example" min="-5" max="5" value="1">時間おき</p>
-							<br>
-							<button type="button" class="btn btn-default btn-block">
-								<span class="glyphicon glyphicon-repeat"></span> 更新
-							</button>
-						</div>
+					<div class="panel panel-default" >
+                            <div class="panel-heading">Setting</div>
+                            <div class="panel-body">
+                                <form name="set">
+                                    <h3>LED<small>現在の様子</small></h3>
+                                    <select name="LED">
+                                        <option value="on">常時ON</option>
+                                        <option value="equinox">春分、秋分</option>
+                                        <option value="summer">夏至</option>
+                                        <option value="winter">冬至</option>
+                                        <option value="off">常時OFF</option>
+                                    </select>
+                                    <br>
+                                    <h3>えさやり<small>エサやりの間隔</small></h3>
+                                    <select name="feed">
+                                        <option value="48">48時間おき</option>
+                                        <option value="24">24時間おき</option>
+                                        <option value="12">12時間おき</option>
+                                    </select><br>
+                                    <h3>ポンプの満ち引き<small>現在、次の満ち引き</small></h3>
+                                    <select name="pump">
+                                        <option value="25">25分おき</option>
+                                        <option value="20">20分おき</option>
+                                        <option value="15">15分おき</option>
+                                        <option value="10">10分おき</option>
+                                    </select><br>
+                                    <br>
+                                    <button type="button" class="btn btn-default btn-block" onclick="setting()">
+                                        <span class="glyphicon glyphicon-repeat"></span> 更新
+                                    </button>
+                                </form>
+                            </div>
 					</div>
 				</div>
 				<div class="col-sm-4">
