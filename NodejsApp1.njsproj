@@ -16,38 +16,23 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
-    <Compile Include="public\js\bootstrap-switch.min.js" />
-    <Compile Include="public\js\bootstrap.js" />
-    <Compile Include="public\js\bootstrap.min.js" />
+    <Compile Include="public\js\animation.js" />
     <Compile Include="public\js\client.js" />
-    <Compile Include="public\js\exporting.js" />
-    <Compile Include="public\js\highcharts.js" />
     <Compile Include="public\js\socket.io.js" />
     <Compile Include="server.js" />
     <Content Include="package.json" />
     <Compile Include="index.js" />
     <Compile Include="mraa.js" />
     <Content Include="public\config.json" />
-    <Content Include="public\css\bootstrap-switch.min.css" />
-    <Content Include="public\css\bootstrap-theme.css" />
-    <Content Include="public\css\bootstrap-theme.min.css" />
-    <Content Include="public\css\bootstrap.css" />
-    <Content Include="public\css\bootstrap.min.css" />
-    <Content Include="public\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="public\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="public\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="public\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="public\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="public\img\camera.jpg" />
     <Content Include="public\img\fish.png" />
     <Content Include="public\img\plant.png" />
-    <Content Include="public\img\Thumbs.db" />
     <Content Include="public\index.html" />
+    <Content Include="public\style.css" />
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="public\" />
-    <Folder Include="public\css\" />
-    <Folder Include="public\fonts\" />
     <Folder Include="public\img\" />
     <Folder Include="public\js\" />
   </ItemGroup>

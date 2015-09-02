@@ -1,68 +1,30 @@
-    var tempHum = [
-        [25.4, 68],
-        [25.6, 68],
-        [25.6, 67],
-        [25.5, 67],
-        [25.3, 67],
-        [25.1, 70],
-        [25.0, 68],
-        [26.2, 69],
-        [26.2, 70],
-        [26.4, 72],
-        [26.7, 71],
-        [26.7, 71],
-        [26.6, 70],
-        [26.5, 69],
-        [26.5, 69],
-        [26.3, 69],
-        [26.3, 67],
-        [26.1, 67],
-        [26.0, 68],
-        [26.2, 69],
-        [26.2, 71],
-        [25.9, 69],
-        [25.6, 68],
-        [25.5, 67],
-    ];
-    
-    var waterTemp = [
-    25.5,
-    25.6,
-    25.9,
-    26.2,
-    26.0,
-    26.1,
-    26.3,
-    26.3,
-    26.5,
-    26.5,
-    26.6,
-    26.7,
-    26.4,
-    26.2,
-    26.2,
-    25.0,
-    25.1,
-    25.3,
-    25.5,
-    25.6,
-    25.6,
-    25.4,
-    25.5,
-    25.3
-];
+$(function () {
+    var cache = [];
+ 
 
-setInterval(loop, 1000, tempHum, waterTemp);
-var i = 0;
-function loop(tempHum, waterTemp) {
-    if (i > tempHum.length - 1) { 
-        i = 0;
-    }
-    $('.waterTemp').html('Water Temperature: ' + waterTemp[i] + 'C');
-    $('.temp').html('Air Temperature: ' + tempHum[i][0] + 'C');
-    $('.hum').html('Humidity: ' + tempHum[i][1] + '\%');
-    i++;
-}
+
+    io.on('waterTemp', function (waterTemp) {
+        $('.waterTemp').html('Water Temperature: ' + waterTemp.toFixed(1) + 'C');
+
+        var d = new Date();
+        var ar = [];
+        ar[0] = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds());
+        ar[1] = waterTemp;
+        
+        cache[cache.length] = ar;
+
+        graph(cache, '#WaterTempGraph', 'kionYEAH');
+    });
+
+    io.on('tempHum', function (tempHum) {
+        $('.temp').html('Air Temperature: ' + tempHum[0] + 'C');
+
+        $('.hum').html('Humidity: ' + tempHum[1] + '\%');
+    });
+    
+
+
+});
 
 function setting() {
     var frm = document.forms["set"];

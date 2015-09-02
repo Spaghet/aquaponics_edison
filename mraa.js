@@ -23,8 +23,8 @@ var ledState = true; //led state bool
 
 
 var led = {
-    on: function () { ledPin.write(1); },
-    off: function () { ledPin.write(0); },
+    on: function () { ledPin.write(0); },
+    off: function () { ledPin.write(1); },
     equinox: function () {
         setInterval(function () { led.write(ledState ? 1:0); ledState = !ledState; }, 43200000);
     },
@@ -110,9 +110,11 @@ function tempTest(){
     sensor.wakeupSensor();
     sensor.sendCommand();
     sensor.receiveData();
-    if (sensor.checkRecieveData() == true) {
-        var humidity = sensor.getHumidity();
-        var temperature = sensor.getTemperature();
+    if (sensor.checkCrc == true) {
+        if (sensor.checkRecieveData() == true) {
+            var humidity = sensor.getHumidity();
+            var temperature = sensor.getTemperature();
+        }
     }
     return [temperature, humidity];
 }
@@ -154,6 +156,7 @@ function winter() {
 var isPump = true;
 function pump(){
     pumpPin.write(isPump ? 1:0);
+    isPump = !isPump;
 }
 //export functions
 module.exports.feed = feed;

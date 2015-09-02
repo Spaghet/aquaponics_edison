@@ -9,10 +9,6 @@ function state(socket) {
 var ioServer = function (server) {
     io = socketio.listen(server); //run the socket.io server on top of the http server
     io.sockets.on('connection', function (socket) {
-        socket.on('toggle', function () {
-            console.log("socket io toggle");
-            mraa.feed();
-        });
         setInterval(state, 10000, socket);
         socket.on('control', function (data) {
             console.log(data);
@@ -27,6 +23,8 @@ var ioServer = function (server) {
             setInterval(mraa.pump(), parseInt(data.pump) * 60000);
 
         });
+
+        socket.on('feed', function () { mraa.feed();});
     }
     );
 };        
