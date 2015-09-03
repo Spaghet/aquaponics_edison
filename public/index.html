@@ -1,0 +1,124 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="js/socket.io.js"></script>
+    <script src="js/animation.js"></script>
+    <script src="js/client.js"></script>
+    <script type="text/javascript">
+        var io = io();
+    </script>
+	<title>Plannet</title>
+</head>
+<body>
+
+	<div id="Header">
+
+		<div id="HeaderScroll">
+			<button class="HeaderBtn" onclick="ChangePageTo1()">
+				Camera
+			</button>
+			<button class="HeaderBtn" onclick="ChangePageTo2()">
+				State
+			</button>
+			<button class="HeaderBtn" onclick="ChangePageTo3()">
+				Setting
+			</button>
+			<button class="HeaderBtn" onclick="ChangePageTo4()">
+				Glaph
+			</button>
+		</div>
+		<div id="HeaderBorderBox">
+			<div id="HeaderBorder">
+			</div>
+		</div>
+	</div>
+
+	<div id="Main">
+		<div id="MainScrollBox">
+
+            <div class="MainContent">
+            	<button id="ChangeCameraBtn" onclick="ChangeCamera()">Change Camera</button>
+            	<div id="CameraBox">
+            		<div id="CameraScrollBox">
+                        <img src="http://192.168.154.50:8081/video" id="Camera1">
+                        <img src="http://192.168.149.195:8080/video" id="Camera2">
+					</div>
+            	</div>
+			</div>
+
+            <div class="MainContent">
+				<div class="StateContent">
+                    <h3 class="temp">Temperature</h3>
+				</div>
+				<div class="StateContent">
+                    <h3 class="hum">Humidity</h3>
+				</div>
+				<div class="StateContent">
+                    <h3 class="waterTemp">Water Temperature</h3>
+				</div>
+			</div>
+
+			<form name="set" class="MainContent" style="background:#111;">
+                <div class="MainForm">
+                    <div class="MainFormHeader">
+                        現在の様子
+                    </div>
+                    <select class="MainFormSelect" name="LED">
+                        <option value="on">常時ON</option>
+                        <option value="equinox">春分、秋分</option>
+                        <option value="summer">夏至</option>
+                        <option value="winter">冬至</option>
+                        <option value="off">常時OFF</option>
+                    </select>
+                </div>
+
+					<div class="MainForm">
+
+						<div class="MainFormHeader">
+							餌やりのやる間隔
+						</div>
+
+                        <select class="MainFormSelect" name="feed">
+                            <option value="48">48時間おき</option>
+                            <option value="24">24時間おき</option>
+                            <option value="12">12時間おき</option>
+                        </select>
+
+					</div>
+
+					<div class="MainForm">
+
+						<div class="MainFormHeader">
+							現在、次の満ち引き
+						</div>
+
+						<select class="MainFormSelect" name="pump">
+                            <option value="25">25分おき</option>
+                            <option value="20">20分おき</option>
+                            <option value="15">15分おき</option>
+                            <option value="10">10分おき</option>
+						</select>
+
+					</div>
+                    <button type="button" id="MainFormButton" onclick="setting()">
+                        更新
+                    </button>
+
+			</form>
+
+			<div class="MainContent">
+                <svg id="air_temp"></svg>
+                <svg id="humidity"></svg>
+                <svg id="water_temp"></svg>
+			</div>
+		</div>
+	</div>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="js/air_temp.js" charset="utf-8"></script>
+<script src="js/water_temp.js" charset="utf-8"></script>
+<script src="js/humidity.js" charset="utf-8"></script>
+</body>
+</html>
