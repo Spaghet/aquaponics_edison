@@ -1,0 +1,408 @@
+@import url(http://fonts.googleapis.com/css?family=Martel:200);
+html,body{
+	font-family: 'Martel', serif;
+	height: 100%;
+	margin: 0;
+	overflow: hidden;
+}
+
+#Header{
+	width: 100%;
+	height: 53px;
+	background:#111;
+	position: relative;
+}
+
+#HeaderScroll{
+	width: 100%;
+	height: 50px;
+	background:#111;
+	position: relative;
+}
+
+.HeaderBtn{
+	width: 25%;
+	height: 50px;
+	border: none;
+	background: 0;
+	color: #fff;
+	float: left;
+	letter-spacing: 3px;
+	font-size: 14px;
+}
+
+#HeaderBorderBox{
+	width: 100%;
+	height: 3px;
+	background: #111;
+}
+
+#HeaderBorder{
+	width: 25%;
+	height: 3px;
+	background: #7f6;
+	position: absolute;
+	left:0;
+}
+
+#Main{
+	width: 100%;
+	height: calc(100% - 53px);
+	background: #222;
+	position: relative;
+	overflow-x: hidden;
+}
+
+#MainScrollBox{
+	width: 400%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+}
+
+.MainContent{
+	width: 25%;
+	height: 100%;
+	position: relative;
+	float: left;
+	background: #222;
+	overflow: hidden;
+}
+
+#ChangeCameraBtn{
+	width: 100%;
+	height: 40px;
+	background: #444;
+	text-align: center;
+	border: none;
+	color: #fff;
+}
+
+#CameraBox{
+	width: 100%;
+	height: calc(100% - 40px);
+	position: relative;
+	overflow: hidden;
+}
+
+#CameraScrollBox{
+	width: 100%;
+	height: 200%;
+	position: absolute;
+}
+
+#Camera1{
+	width: 100%;
+	height: 50%;
+	vertical-align: bottom;
+}
+
+#Camera2{
+	width: 100%;
+	height: 50%;
+	vertical-align: bottom;
+}
+
+.StateContent{
+	width: 80%;
+	height: 20px;
+	font-size: 20px;
+	margin-left: 15%;
+	margin-top: 10%;
+	color: #fff;
+}
+
+.MainForm{
+	width: 80%;
+	margin-left: 15%;
+	margin-top: 7%; 
+}
+
+.MainFormHeader{
+	width: 300px;
+	color: #fff;
+	font-size: 25px;
+}
+
+.MainFormSelect{
+	width: 150px;
+}
+
+#MainFormButton {
+    margin-left: 15%;
+    margin-top: 3.5%;
+    width: 150px;
+}
+
+@-webkit-keyframes Btn1to2{
+	0%{ left: 0;}
+	100%{ left: 25%;}
+}
+
+@-webkit-keyframes Btn1to2{
+	0%{ left: 0;}
+	100%{ left: 25%;}
+}
+
+@-webkit-keyframes Btn1to3{
+	0%{ left: 0;}
+	100%{ left: 50%;}
+}
+
+@-webkit-keyframes Btn1to3{
+	0%{ left: 0;}
+	100%{ left: 50%;}
+}
+
+@-webkit-keyframes Btn1to4{
+	0%{ left: 0;}
+	100%{ left: 75%;}
+}
+
+@-webkit-keyframes Btn1to4{
+	0%{ left: 0;}
+	100%{ left: 75%;}
+}
+
+@-webkit-keyframes Btn2to1{
+	0%{ left: 25%;}
+	100%{ left: 0%;}
+}
+
+@-webkit-keyframes Btn2to1{
+	0%{ left: 25%;}
+	100%{ left: 0%;}
+}
+
+@-webkit-keyframes Btn2to3{
+	0%{ left: 25%;}
+	100%{ left: 50%;}
+}
+
+@-webkit-keyframes Btn2to3{
+	0%{ left: 25%;}
+	100%{ left: 50%;}
+}
+
+@-webkit-keyframes Btn2to4{
+	0%{ left: 25%;}
+	100%{ left: 75%;}
+}
+
+@-webkit-keyframes Btn2to4{
+	0%{ left: 25%;}
+	100%{ left: 75%;}
+}
+
+@-webkit-keyframes Btn3to1{
+	0%{ left: 50%;}
+	100%{ left: 0%;}
+}
+
+@-webkit-keyframes Btn3to1{
+	0%{ left: 50%;}
+	100%{ left: 0%;}
+}
+
+@-webkit-keyframes Btn3to2{
+	0%{ left: 50%;}
+	100%{ left: 25%;}
+}
+
+@-webkit-keyframes Btn3to2{
+	0%{ left: 50%;}
+	100%{ left: 25%;}
+}
+
+@-webkit-keyframes Btn3to4{
+	0%{ left: 50%;}
+	100%{ left: 75%;}
+}
+
+@-webkit-keyframes Btn3to4{
+	0%{ left: 50%;}
+	100%{ left: 75%;}
+}
+
+@-webkit-keyframes Btn4to1{
+	0%{ left: 75%;}
+	100%{ left: 0%;}
+}
+
+@-webkit-keyframes Btn4to1{
+	0%{ left: 75%;}
+	100%{ left: 0%;}
+}
+
+@-webkit-keyframes Btn4to2{
+	0%{ left: 75%;}
+	100%{ left: 25%;}
+}
+
+@-webkit-keyframes Btn4to2{
+	0%{ left: 75%;}
+	100%{ left: 25%;}
+}
+
+@-webkit-keyframes Btn4to3{
+	0%{ left: 75%;}
+	100%{ left: 50%;}
+}
+
+@-webkit-keyframes Btn4to3{
+	0%{ left: 75%;}
+	100%{ left: 50%;}
+}
+
+@-webkit-keyframes Box1to2{
+	0%{ left: 0;}
+	100%{ left: -100%;}
+}
+
+@-webkit-keyframes Box1to2{
+	0%{ left: 0;}
+	100%{ left: -100%;}
+}
+
+@-webkit-keyframes Box1to3{
+	0%{ left: 0;}
+	100%{ left: -200%;}
+}
+
+@-webkit-keyframes Box1to3{
+	0%{ left: 0;}
+	100%{ left: -200%;}
+}
+
+@-webkit-keyframes Box1to4{
+	0%{ left: 0;}
+	100%{ left: -300%;}
+}
+
+@-webkit-keyframes Box1to4{
+	0%{ left: 0;}
+	100%{ left: -300%;}
+}
+
+@-webkit-keyframes Box2to1{
+	0%{ left: -100%;}
+	100%{ left: 00%;}
+}
+
+@-webkit-keyframes Box2to1{
+	0%{ left: -100%;}
+	100%{ left: 00%;}
+}
+
+@-webkit-keyframes Box2to3{
+	0%{ left: -100%;}
+	100%{ left: -200%;}
+}
+
+@-webkit-keyframes Box2to3{
+	0%{ left: -100%;}
+	100%{ left: -200%;}
+}
+
+@-webkit-keyframes Box2to4{
+	0%{ left: -100%;}
+	100%{ left: -300%;}
+}
+
+@-webkit-keyframes Box2to4{
+	0%{ left: -100%;}
+	100%{ left: -300%;}
+}
+
+@-webkit-keyframes Box3to1{
+	0%{ left: -200%;}
+	100%{ left: 00%;}
+}
+
+@-webkit-keyframes Box3to1{
+	0%{ left: -200%;}
+	100%{ left: 00%;}
+}
+
+@-webkit-keyframes Box3to2{
+	0%{ left: -200%;}
+	100%{ left: -100%;}
+}
+
+@-webkit-keyframes Box3to2{
+	0%{ left: -200%;}
+	100%{ left: -100%;}
+}
+
+@-webkit-keyframes Box3to4{
+	0%{ left: -200%;}
+	100%{ left: -300%;}
+}
+
+@-webkit-keyframes Box3to4{
+	0%{ left: -200%;}
+	100%{ left: -300%;}
+}
+
+@-webkit-keyframes Box4to1{
+	0%{ left: -300%;}
+	100%{ left: 00%;}
+}
+
+@-webkit-keyframes Box4to1{
+	0%{ left: -300%;}
+	100%{ left: 00%;}
+}
+
+@-webkit-keyframes Box4to2{
+	0%{ left: -300%;}
+	100%{ left: -100%;}
+}
+
+@-webkit-keyframes Box4to2{
+	0%{ left: -300%;}
+	100%{ left: -100%;}
+}
+
+@-webkit-keyframes Box4to3{
+	0%{ left: -300%;}
+	100%{ left: -200%;}
+}
+
+@-webkit-keyframes Box4to3{
+	0%{ left: -300%;}
+	100%{ left: -200%;}
+}
+
+@-webkit-keyframes Camera1to2{
+	0%{ top: 0%;}
+	100%{ top: -100%;}
+}
+
+@-moz-keyframes Camera1to2{
+	0%{ top: 0%;}
+	100%{ top: -100%;}
+}
+
+@-webkit-keyframes Camera2to1{
+	0%{ top: -100%;}
+	100%{ top: 00%;}
+}
+
+@-moz-keyframes Camera2to1{
+	0%{ top: -100%;}
+	100%{ top: 00%;}
+}
+
+
+@media screen and (min-width: 901px) {
+	body{
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 900px) {
+	body{
+		width: 900px;
+	}
+}
