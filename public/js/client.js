@@ -18,7 +18,6 @@ $(function () {
 
     io.on('tempHum', function (tempHum) {
         $('.temp').html('Air Temperature: ' + tempHum[0] + 'C');
-
         $('.hum').html('Humidity: ' + tempHum[1] + '\%');
     });
     
