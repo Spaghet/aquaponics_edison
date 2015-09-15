@@ -8,14 +8,12 @@ var waterTempPin = new m.Aio(0);
 var feeder = new m.Gpio(12);
 var ledPin = new m.Gpio(13); 
 var sw1 = new m.Gpio(6);
-var wet = new m.Gpio(11);
 var pumpPin = new m.Gpio(7);
 
 //set direction
 sw1.dir(m.DIR_IN);
 ledPin.dir(m.DIR_OUT); 
 feeder.dir(m.DIR_OUT);
-wet.dir(m.DIR_IN);
 pumpPin.dir(m.DIR_OUT);
 
 var analogValueFloat = waterTempPin.readFloat();
@@ -23,8 +21,18 @@ var ledState = true; //led state bool
 
 
 var led = {
-    on: function () { ledPin.write(0); },
-    off: function () { ledPin.write(1); },
+    on: function () {
+        ledPin.write(0);
+        continueLoop = false;
+        setTimeout(null, 10100);
+        continueLoop = true;
+    },
+    off: function () {
+        ledPin.write(1);
+        continueLoop = false;
+        setTimeout(null, 10100);
+        continueLoop = true;
+    },
     equinox: function () {
         setInterval(function () { led.write(ledState ? 1:0); ledState = !ledState; }, 43200000);
     },
@@ -37,7 +45,8 @@ var led = {
 //feed the fish yo
 function feed()
 {
-    var sw = sw1.read();  
+    var sw = sw1.read();
+    console.log(sw);
     if (sw) {
         feeder.write(1);
         setTimeout(function () { feeder.write(0); }, 1000);
@@ -57,6 +66,25 @@ function waterTemp() {
     return temp;
 };
 
+var sleep = require('sleep');
+
+function crc16(buf, length) {
+    var crc = 0xFFFF;
+    for (var j = 0; j < length; j++) {
+        crc ^= buf[j];
+        for (var i = 0; i < 8; i++) {
+            if (crc & 0x01) {
+                crc >>= 1;
+                crc ^= 0xA001;
+            }
+            else {
+                crc >>= 1;
+            }
+        }
+    }
+    return crc;
+}
+
 //read tempreture&humid
 function Am2321(bus, address, bufsize) {
     this.x = new m.I2c(bus);
@@ -70,6 +98,7 @@ function Am2321(bus, address, bufsize) {
     this.sendCommand = function () {
         get_command = new Buffer([0x03, 0x00, 0x04]);
         this.x.write(get_command);
+        sleep.usleep(1500);
     }
 
     this.receiveData = function () {
@@ -105,34 +134,44 @@ function Am2321(bus, address, bufsize) {
         return temperature / 10;
     }
 }
+
+//var sensor = new Am2321(6, 0x5C, 8);
+var temperature, humidity;
 function tempTest(){
-    var sensor = new Am2321(6, 0x5C, 8);
     sensor.wakeupSensor();
     sensor.sendCommand();
     sensor.receiveData();
-    if (sensor.checkCrc == true) {
         if (sensor.checkRecieveData() == true) {
-            var humidity = sensor.getHumidity();
-            var temperature = sensor.getTemperature();
+             humidity = sensor.getHumidity();
+             temperature = sensor.getTemperature();
         }
-    }
-    return [temperature, humidity];
+        if (temperature > -100 && temperature < 300) {
+            return [temperature, humidity];
+        }
 }
 
 var continueLoop = true;
 //timerLed
 function timerLed(sunrise, sunset) {
-    var currentDate = new Date();
     var isDay = true;
-    
-    if (isDay && currentDate.getHours() === sunset.getHours() && currentDate.getMinutes() === sunset.getMinutes()) { 
-        ledPin.write(0);
-    }
-    if (!isDay && currentDate.getHours() === sunrise.getHours() && currentDate.getMinutes() === sunrise.getMinutes()) {
-        ledPin.write(1);
-    }
-    
-    if(continueLoop){ setTimeout(timerLed, 10000, sunrise, sunset);}
+    var currentDate = new Date();
+    var returnFunc = function () {
+        currentDate = new Date();
+        if (currentDate.getHours() >= sunset.getHours() && (currentDate.getMinutes() >= sunset.getMinutes() || currentDate.getHours() > sunset.getHours())) {
+            ledPin.write(0);
+            isDay = false;
+        }
+        if (currentDate.getHours() >= sunrise.getHours() && currentDate.getMinutes() >= sunrise.getMinutes() && currentDate.getHours() <= sunset.getHours() && currentDate.getMinutes() <= sunset.getMinutes()) {
+            ledPin.write(1);
+            isDay = true;
+        }
+
+        if (continueLoop) {
+            setTimeout(returnFunc, 10000);
+            console.log("summer");
+        }
+    };
+    return returnFunc;
 
 }
 
@@ -140,18 +179,24 @@ function summer() {
     continueLoop = false;
     setTimeout(null, 10010);
     continueLoop = true;
-    sunrise.setHours(4, 26);
-    sunset.setHours(19, 1);
-    timerLed(sunrise, sunset);
+    sunrise.setHours(4);
+    sunrise.setMinutes(26);
+    sunset.setHours(19);
+    sunset.setMinutes(1);
+    var run = timerLed(sunrise, sunset);
+    run();
 }
 
 function winter() {
     continueLoop = false;
     setTimeout(null, 10010);
     continueLoop = true;
-    sunrise.setHours(6,47);
-    sunset.setHours(16,32);
-    timerLed(sunrise, sunset);
+    sunrise.setHours(6);
+    sunrise.setMinutes(47);
+    sunset.setHours(16);
+    sunset.setMinutes(32);
+    var run = timerLed(sunrise, sunset);
+    run();
 }
 var isPump = true;
 function pump(){
