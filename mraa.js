@@ -23,15 +23,9 @@ var ledState = true; //led state bool
 var led = {
     on: function () {
         ledPin.write(0);
-        continueLoop = false;
-        setTimeout(null, 10100);
-        continueLoop = true;
     },
     off: function () {
         ledPin.write(1);
-        continueLoop = false;
-        setTimeout(null, 10100);
-        continueLoop = true;
     },
     equinox: equinox,
     summer: summer,
@@ -44,7 +38,6 @@ var led = {
 function feed()
 {
     var sw = sw1.read();
-    console.log(sw);
     if (sw) {
         feeder.write(1);
         setTimeout(function () { feeder.write(0); }, 1000);
@@ -148,74 +141,75 @@ function tempTest(){
         }
 }
 
-var continueLoop = true;
-//timerLed
-function timerLed(sunrise, sunset) {
-    var isDay = true;
-    var currentDate = new Date();
-    var returnFunc = function () {
-        currentDate = new Date();
-        if (isDay && currentDate.getHours() >= sunset.getHours() && (currentDate.getMinutes() >= sunset.getMinutes() || currentDate.getHours() > sunset.getHours())) {
-            ledPin.write(1);
-            isDay = false;
-        }
-        if (!isDay && currentDate.getHours() >= sunrise.getHours() && currentDate.getMinutes() >= sunrise.getMinutes() && currentDate.getHours() <= sunset.getHours() && currentDate.getMinutes() <= sunset.getMinutes()) {
-            ledPin.write(0);
-            isDay = true;
-        }
 
-        if (continueLoop) {
-            setTimeout(returnFunc, 10000);
+//Given the sunset/sunrise time, the led should turn on/off at that time. The LED relay is Normally Open, so 0 is on, 1 is off. 
+function timerLed(sr, ss) {
+    var sunrise = sr;
+    var sunset = ss;
+    var currentDate = new Date();
+    var returnFunc = function (stop) {
+        if (stop) {
+            clearTimeout(led);
         }
+        currentDate = new Date();
+        if ((currentDate.getHours() >= sunset.getHours() && currentDate.getMinutes() >= sunset.getMinutes()) || (currentDate.getHours() < sunrise.getHours() && currentDate.getMinutes() < sunrise.getMinutes() )) {
+            ledPin.write(1);
+        }
+        if ((currentDate.getHours() >= sunrise.getHours() && currentDate.getMinutes() >= sunrise.getMinutes()) && (currentDate.getHours() < sunset.getHours() && currentDate.getMinutes() < sunset.getMinutes())) {
+            ledPin.write(0);
+        }
+        var led = setTimeout(returnFunc, 30000, false);
     };
     return returnFunc;
 
 }
 
 function summer() {
-    continueLoop = false;
-    setTimeout(null, 10010);
-    continueLoop = true;
     sunrise.setHours(4);
     sunrise.setMinutes(26);
     sunset.setHours(19);
     sunset.setMinutes(1);
     var run = timerLed(sunrise, sunset);
-    run();
+    run(true);
 }
 
 function winter() {
-    continueLoop = false;
-    setTimeout(null, 10010);
-    continueLoop = true;
     sunrise.setHours(6);
     sunrise.setMinutes(47);
     sunset.setHours(16);
     sunset.setMinutes(32);
     var run = timerLed(sunrise, sunset);
-    run();
+    run(true);
 }
 
 function equinox() {
-    continueLoop = false;
-    setTimeout(null, 10010);
-    continueLoop = true;
     sunrise.setHours(5);
     sunrise.setMinutes(35);
     sunset.setHours(17);
     sunset.setMinutes(45);
     var run = timerLed(sunrise, sunset);
-    run();
+    run(true);
 }
 
-var isPump = true;
-function pump(){
-    pumpPin.write(isPump ? 1:0);
-    isPump = !isPump;
+//felt like writing a closure to implement  a timer that turns the pump on for 5 minutes and leaves pump off for t minutes.
+//the pump is pretty fast at filling the growbed so it should only take 5 minutes to fill up. 
+function pump() {
+    var time = 35;
+    var rtFunc = function (t, stop) {
+        if (stop) {
+            clearTimeout(off);
+            clearTimeout(on);
+        }
+        time = t;
+        pumpPin.write(1);
+        var off = setTimeout(pumpPin.write, 300000, 0);
+        var on = setTimeout(rtFunc, time * 60000, time, false);
+    };
+    return rtFunc;
 }
 //export functions
 module.exports.feed = feed;
 module.exports.led = led;
 module.exports.waterTemp = waterTemp;
 module.exports.tempTest = tempTest;
-module.exports.pump = pump;
+module.exports.pump = pump();
