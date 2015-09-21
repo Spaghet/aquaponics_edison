@@ -22,6 +22,7 @@ var ioServer = function (server) {
             }
         });
         socket.on("feedControl", function (data) {
+            console.log("feed: " + data);
             if (feedInterval != null) {
                 clearInterval(pumpInterval);
                 console.log("clear");
@@ -30,12 +31,8 @@ var ioServer = function (server) {
             feedInterval = setInterval(mraa.feed, parseInt(data) * 3600000);
         });
         socket.on("pumpControl", function (data) {
-            if (pumpInterval != null) {
-                clearInterval(pumpInterval);
-                console.log("clear");
-            }
-            mraa.pump();
-            pumpInterval = setInterval(mraa.pump, parseInt(data) * 60000);
+            console.log("pump: " + data);
+            mraa.pump(parseInt(data), true);
         });
     });
 };        
