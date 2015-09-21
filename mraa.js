@@ -147,18 +147,24 @@ function timerLed(sr, ss) {
     var sunrise = sr;
     var sunset = ss;
     var currentDate = new Date();
-    var returnFunc = function (stop) {
-        if (stop) {
-            clearTimeout(led);
-        }
+    var cH, cM, sH,sM,rH,rM;
+    sH = sunset.getHours();
+    sM = sunset.getMinutes();
+    rH = sunrise.getHours();
+    rM = sunrise.getMinutes();
+    var returnFunc = function () {
         currentDate = new Date();
-        if ((currentDate.getHours() >= sunset.getHours() && currentDate.getMinutes() >= sunset.getMinutes()) || (currentDate.getHours() < sunrise.getHours() && currentDate.getMinutes() < sunrise.getMinutes() )) {
+        cH = currentDate.getHours();
+        cM = currentDate.getMinutes();
+        var isSet = (cH >= sH) && (cM >= sM);
+        isSet = isSet || (cH < rH);
+        isSet = isSet || ((cH == rH )&& (cM <= rM));
+        if (!isSet) {
+            ledPin.write(0);
+        } else {
             ledPin.write(1);
         }
-        if ((currentDate.getHours() >= sunrise.getHours() && currentDate.getMinutes() >= sunrise.getMinutes()) && (currentDate.getHours() < sunset.getHours() && currentDate.getMinutes() < sunset.getMinutes())) {
-            ledPin.write(0);
-        }
-        var led = setTimeout(returnFunc, 30000, false);
+        setTimeout(returnFunc, 30000);
     };
     return returnFunc;
 
@@ -170,7 +176,7 @@ function summer() {
     sunset.setHours(19);
     sunset.setMinutes(1);
     var run = timerLed(sunrise, sunset);
-    run(true);
+    run();
 }
 
 function winter() {
@@ -179,7 +185,7 @@ function winter() {
     sunset.setHours(16);
     sunset.setMinutes(32);
     var run = timerLed(sunrise, sunset);
-    run(true);
+    run();
 }
 
 function equinox() {
@@ -188,7 +194,7 @@ function equinox() {
     sunset.setHours(17);
     sunset.setMinutes(45);
     var run = timerLed(sunrise, sunset);
-    run(true);
+    run();
 }
 
 //felt like writing a closure to implement  a timer that turns the pump on for 5 minutes and leaves pump off for t minutes.
@@ -202,7 +208,7 @@ function pump() {
         }
         time = t;
         pumpPin.write(1);
-        var off = setTimeout(pumpPin.write, 300000, 0);
+        var off = setTimeout(function () { pumpPin.write(0); }, 300000);
         var on = setTimeout(rtFunc, time * 60000, time, false);
     };
     return rtFunc;
