@@ -10,7 +10,9 @@ var ioServer = function (server) {
     io = socketio.listen(server); //run the socket.io server on top of the http server
     io.sockets.on('connection', function (socket) {
         setInterval(state, 5000, socket);
+        var pumpInterval, feedInterval;
         socket.on("ledControl", function (data) {
+            console.log(data);
             switch (data) {
                 case 'on': mraa.led.on(); break;
                 case 'equinox': mraa.led.equinox(); break;
@@ -20,13 +22,22 @@ var ioServer = function (server) {
             }
         });
         socket.on("feedControl", function (data) {
-            setInterval(mraa.feed(), parseInt(data) * 3600000);
+            if (feedInterval != null) {
+                clearInterval(pumpInterval);
+                console.log("clear");
+            }
+            mraa.feed();
+            feedInterval = setInterval(mraa.feed, parseInt(data) * 3600000);
         });
         socket.on("pumpControl", function (data) {
-            setInterval(mraa.pump(), parseInt(data) * 60000);
+            if (pumpInterval != null) {
+                clearInterval(pumpInterval);
+                console.log("clear");
+            }
+            mraa.pump();
+            pumpInterval = setInterval(mraa.pump, parseInt(data) * 60000);
         });
     });
 };        
-
 
 module.exports.listen = ioServer;

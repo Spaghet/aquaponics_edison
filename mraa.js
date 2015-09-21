@@ -33,9 +33,7 @@ var led = {
         setTimeout(null, 10100);
         continueLoop = true;
     },
-    equinox: function () {
-        setInterval(function () { led.write(ledState ? 1:0); ledState = !ledState; }, 43200000);
-    },
+    equinox: equinox,
     summer: summer,
     winter: winter,
 };
@@ -157,18 +155,17 @@ function timerLed(sunrise, sunset) {
     var currentDate = new Date();
     var returnFunc = function () {
         currentDate = new Date();
-        if (currentDate.getHours() >= sunset.getHours() && (currentDate.getMinutes() >= sunset.getMinutes() || currentDate.getHours() > sunset.getHours())) {
-            ledPin.write(0);
+        if (isDay && currentDate.getHours() >= sunset.getHours() && (currentDate.getMinutes() >= sunset.getMinutes() || currentDate.getHours() > sunset.getHours())) {
+            ledPin.write(1);
             isDay = false;
         }
-        if (currentDate.getHours() >= sunrise.getHours() && currentDate.getMinutes() >= sunrise.getMinutes() && currentDate.getHours() <= sunset.getHours() && currentDate.getMinutes() <= sunset.getMinutes()) {
-            ledPin.write(1);
+        if (!isDay && currentDate.getHours() >= sunrise.getHours() && currentDate.getMinutes() >= sunrise.getMinutes() && currentDate.getHours() <= sunset.getHours() && currentDate.getMinutes() <= sunset.getMinutes()) {
+            ledPin.write(0);
             isDay = true;
         }
 
         if (continueLoop) {
             setTimeout(returnFunc, 10000);
-            console.log("summer");
         }
     };
     return returnFunc;
@@ -198,6 +195,19 @@ function winter() {
     var run = timerLed(sunrise, sunset);
     run();
 }
+
+function equinox() {
+    continueLoop = false;
+    setTimeout(null, 10010);
+    continueLoop = true;
+    sunrise.setHours(5);
+    sunrise.setMinutes(35);
+    sunset.setHours(17);
+    sunset.setMinutes(45);
+    var run = timerLed(sunrise, sunset);
+    run();
+}
+
 var isPump = true;
 function pump(){
     pumpPin.write(isPump ? 1:0);
