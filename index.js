@@ -1,5 +1,5 @@
 var socketio = require('socket.io');
-var io = require('./server.js');
+var io = require('./socket.js');
 var mraa = require('./mraa.js');
 var http = require('http');
 var path = require('path');

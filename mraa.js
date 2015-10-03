@@ -1,9 +1,6 @@
 var m = require('mraa'); //require mraa
 console.log(m.getVersion());
 
-var sunrise = new Date();
-var sunset = new Date();
-//get pin 13
 var waterTempPin = new m.Aio(0); 
 var feeder = new m.Gpio(12);
 var ledPin = new m.Gpio(13); 
@@ -57,7 +54,7 @@ function waterTemp() {
     return temp;
 };
 
-//read tempreture&humid
+//read tempreture&humidity
 function Am2321(bus, address, bufsize) {
     this.x = new m.I2c(bus);
     this.x.address(address);
@@ -119,6 +116,8 @@ function tempTest(){
     return [temperature, humidity];
 }
 
+var sunrise = new Date();
+var sunset = new Date();
 var continueLoop = true;
 //timerLed
 function timerLed(sunrise, sunset) {
@@ -153,14 +152,19 @@ function winter() {
     sunset.setHours(16,32);
     timerLed(sunrise, sunset);
 }
-var isPump = true;
-function pump(){
-    pumpPin.write(isPump ? 1:0);
-    isPump = !isPump;
+
+function pump() {
+	var isPump = true;
+	return function () {
+		pumpPin.write(isPump ? 1:0);
+		isPump = !isPump;
+	};
 }
+
+
 //export functions
 module.exports.feed = feed;
 module.exports.led = led;
 module.exports.waterTemp = waterTemp;
 module.exports.tempTest = tempTest;
-module.exports.pump = pump;
+module.exports.pump = pump();
