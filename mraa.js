@@ -121,6 +121,7 @@ function tempTest(){
 //Given the sunset/sunrise time, the led should turn on/off at that time. The LED relay is Normally Open, so 0 is on, 1 is off. 
 function led(season) {
     var sunrise, sunset, currentDate, timeout;
+    sunrise = new Date(); sunset = new Date();
 
     var iterator = function (season) {
         if (timeout != null) {

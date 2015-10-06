@@ -28,7 +28,7 @@ var ioServer = function (server) {
         });
         socket.on("pumpControl", function (data) {
             console.log("pump: " + data + "minute intervals");
-            pump(data.parseInt(), true);
+            pump(data, true);
         });
     });
 };        
