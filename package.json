@@ -9,6 +9,10 @@
   "author": "Rikuo Hasegawa",
   "license": "ISC",
   "dependencies": {
-    "mraa-js": "^0.1.0"
+    "mime": "^1.3.4",
+    "mraa-js": "^0.1.0",
+    "path": "^0.12.7",
+    "sleep": "^3.0.0",
+    "socket.io": "^1.3.7"
   }
 }
