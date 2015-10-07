@@ -119,11 +119,12 @@ function tempTest(){
 }
 
 //Given the sunset/sunrise time, the led should turn on/off at that time. The LED relay is Normally Open, so 0 is on, 1 is off. 
-function led(season) {
+function led() {
     var sunrise, sunset, currentDate, timeout;
     sunrise = new Date(); sunset = new Date();
 
-    var iterator = function (season) {
+    var returnFunc = function (season) {
+        var cH, cM, sH, sM, rH, rM;
         if (timeout != null) {
             clearTimeout(timeout);
         }
@@ -148,31 +149,38 @@ function led(season) {
                 ledPin.write(1);
                 return;
                 break;
+            case "summer":
+            case "winter":
+            case "equinox":
+                sH = sunset.getHours();
+                sM = sunset.getMinutes();
+                rH = sunrise.getHours();
+                rM = sunrise.getMinutes();
         }
-        var cH, cM, sH, sM, rH, rM;
-        sH = sunset.getHours();
-        sM = sunset.getMinutes();
-        rH = sunrise.getHours();
-        rM = sunrise.getMinutes();
 
-        currentDate = new Date();
-        cH = currentDate.getHours();
-        cM = currentDate.getMinutes();
-        rH = (rH * 60) + rM;
-        sH = (sH * 60) + sM;
-        currentDate = (cH * 60) + cM;
-
-        var isSet = (currentDate >= sH) || (currentDate < rH); 
-        //LED is pulldown so 1 = off 0 = on
-        if (isSet) {
-            ledPin.write(1);
-        } else {
-            ledPin.write(0);
+        function iterator(){
+            var setTime, riseTime;
+            currentDate = new Date();
+            cH = currentDate.getHours();
+            cM = currentDate.getMinutes();
+            riseTime = (rH * 60) + rM;
+            setTime = (sH * 60) + sM;
+            currentDate = (cH * 60) + cM;
+            
+            var isSet = (currentDate >= setTime) || (currentDate < riseTime);
+            //LED is pulldown so 1 = off 0 = on
+            if (isSet) {
+                ledPin.write(1);
+            } else {
+                ledPin.write(0);
+            }
+            timeout = setTimeout(iterator, 30000);
         }
-        timeout = setTimeout(iterator, 30000);
+        iterator();
+
     };
 
-    return iterator;
+    return returnFunc;
 }
 
 //felt like writing a closure to implement  a timer that turns the pump on for 5 minutes and leaves pump off for t minutes.
