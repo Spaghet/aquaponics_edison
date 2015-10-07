@@ -158,11 +158,11 @@ function led(season) {
         currentDate = new Date();
         cH = currentDate.getHours();
         cM = currentDate.getMinutes();
-        sunrise = (rH * 60) + rM;
-        sunset = (sH * 60) + sM;
+        rH = (rH * 60) + rM;
+        sH = (sH * 60) + sM;
         currentDate = (cH * 60) + cM;
 
-        var isSet = (currentDate >= sunset) || (currentDate < sunrise); 
+        var isSet = (currentDate >= sH) || (currentDate < rH); 
         //LED is pulldown so 1 = off 0 = on
         if (isSet) {
             ledPin.write(1);
