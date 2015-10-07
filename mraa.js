@@ -128,16 +128,16 @@ function led(season) {
         }
         switch (season) {
             case "summer":
-                sunrise.setHours(4, 26);
-                sunset.setHours(19, 1);
+                sunrise.setHours(4, 26,0,0);
+                sunset.setHours(19, 1,0,0);
                 break;
             case "winter":
-                sunrise.setHours(6, 47);
-                sunset.setHours(16, 32);
+                sunrise.setHours(6, 47,0,0);
+                sunset.setHours(16, 32,0,0);
                 break;
             case "equinox":
-                sunrise.setHours(5, 35);
-                sunset.setHours(17, 45);
+                sunrise.setHours(5, 35,0,0);
+                sunset.setHours(17, 45,0,0);
                 break;
             case "on":
                 ledPin.write(0);
@@ -157,13 +157,16 @@ function led(season) {
         currentDate = new Date();
         cH = currentDate.getHours();
         cM = currentDate.getMinutes();
-        var isSet = (cH >= sH) && (cM >= sM);
-        isSet = isSet || (cH < rH);
-        isSet = isSet || ((cH == rH ) && (cM <= rM));
-        if (!isSet) {
-            ledPin.write(0);
-        } else {
+        sunrise = (rH * 60) + rM;
+        sunset = (sH * 60) + sM;
+        currentDate = (cH * 60) + cM;
+
+        var isSet = (currentDate >= sunset) || (currentDate < sunrise); 
+        //LED is pulldown so 1 = off 0 = on
+        if (isSet) {
             ledPin.write(1);
+        } else {
+            ledPin.write(0);
         }
         timeout = setTimeout(iterator, 30000);
     };
