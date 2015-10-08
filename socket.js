@@ -11,7 +11,6 @@ var ioServer = function (server) {
     io.sockets.on('connection', function (socket) {
         setInterval(state, 5000, socket);
         var feedInterval;
-        var pump = mraa.pump();
         var led = mraa.led();
         socket.on("ledControl", function (data) {
             console.log(data);
@@ -28,7 +27,7 @@ var ioServer = function (server) {
         });
         socket.on("pumpControl", function (data) {
             console.log("pump: " + data + "minute intervals");
-            pump(data, true);
+            pump(data);
         });
     });
 };        
