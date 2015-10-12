@@ -3,18 +3,21 @@ var mraa = require('./mraa.js');
 
 function state(socket) {
     socket.emit("waterTemp" , mraa.waterTemp());
-   // socket.emit('tempHum', mraa.tempTest());
+    socket.emit('tempHum', mraa.tempTest());
 }
 
 var ioServer = function (server) {
-    io = socketio.listen(server); //run the socket.io server on top of the http server
+    var io = socketio.listen(server); //run the socket.io server on top of the http server
+    var wSocket;
+    if (wSocket !== undefined) {
+        setInterval(state, 10000, wSocket);
+    }
     io.sockets.on('connection', function (socket) {
-        setInterval(state, 5000, socket);
+        wSocket = socket;
         var feedInterval;
-        var led = mraa.led();
         socket.on("ledControl", function (data) {
             console.log(data);
-            led(data.toString());
+            mraa.led(data.toString());
         });
         socket.on("feedControl", function (data) {
             console.log("feed: " + data);
