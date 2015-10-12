@@ -204,7 +204,7 @@ function pump() {
 
 //export functions
 module.exports.feed = feed;
-module.exports.led = led;
+module.exports.led = led();
 module.exports.waterTemp = waterTemp;
 module.exports.tempTest = tempTest;
 module.exports.pump = pump();
