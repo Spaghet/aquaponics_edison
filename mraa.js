@@ -2,15 +2,15 @@ var sleep = require('sleep');
 var m = require('mraa'); //require mraa
 console.log(m.getVersion());
 
-var waterTempPin = new m.Aio(0); 
+var waterTempPin = new m.Aio(0);
 var feeder = new m.Gpio(12);
-var ledPin = new m.Gpio(13); 
+var ledPin = new m.Gpio(13);
 var sw1 = new m.Gpio(6);
 var pumpPin = new m.Gpio(7);
 
 //set direction
 sw1.dir(m.DIR_IN);
-ledPin.dir(m.DIR_OUT); 
+ledPin.dir(m.DIR_OUT);
 feeder.dir(m.DIR_OUT);
 pumpPin.dir(m.DIR_OUT);
 
@@ -118,29 +118,28 @@ function tempTest(){
         }
 }
 
-//Given the sunset/sunrise time, the led should turn on/off at that time. The LED relay is Normally Open, so 0 is on, 1 is off. 
+//Given the sunset/sunrise time, the led should turn on/off at that time. The LED relay is Normally Open, so 0 is on, 1 is off.
 function led() {
     var sunrise, sunset, currentDate, timeout;
-    var sunrise, sunset;
-    sunrise = { hour: 0, minute: 0 };
-    sunset = { hour: 0, minute: 0 };
+    sunrise = new Date(); sunset = new Date();
+
     var returnFunc = function (season) {
-        console.log(season);
+        var cH, cM, sH, sM, rH, rM;
         if (timeout != null) {
             clearTimeout(timeout);
         }
         switch (season) {
             case "summer":
-                sunrise = { hour: 4, minute: 26 };
-                sunset = { hour: 19, minute: 1 };
+                sunrise.setHours(4, 26,0,0);
+                sunset.setHours(19, 1,0,0);
                 break;
             case "winter":
-                sunrise = { hour: 6, minute: 47 };
-                sunset = { hour: 16, minute: 32 };
+                sunrise.setHours(6, 47,0,0);
+                sunset.setHours(16, 32,0,0);
                 break;
             case "equinox":
-                sunrise = { hour: 5, minute: 35 };
-                sunset = { hour: 17, minute: 45 };
+                sunrise.setHours(5, 35,0,0);
+                sunset.setHours(17, 45,0,0);
                 break;
             case "on":
                 ledPin.write(0);
@@ -150,15 +149,24 @@ function led() {
                 ledPin.write(1);
                 return;
                 break;
+            case "summer":
+            case "winter":
+            case "equinox":
+                sH = sunset.getHours();
+                sM = sunset.getMinutes();
+                rH = sunrise.getHours();
+                rM = sunrise.getMinutes();
         }
 
         function iterator(){
             var setTime, riseTime;
             currentDate = new Date();
-            currentDate = (currentDate.getHours() * 60) + currentDate.getMinutes();
-            setTime = (sunset.hour * 60) + sunset.minute;
-            riseTime = (sunrise.hour * 60) + sunrise.minute;
-            
+            cH = currentDate.getHours();
+            cM = currentDate.getMinutes();
+            riseTime = (rH * 60) + rM;
+            setTime = (sH * 60) + sM;
+            currentDate = (cH * 60) + cM;
+
             var isSet = (currentDate >= setTime) || (currentDate < riseTime);
             //LED is pulldown so 1 = off 0 = on
             if (isSet) {
@@ -176,21 +184,20 @@ function led() {
 }
 
 //felt like writing a closure to implement  a timer that turns the pump on for 5 minutes and leaves pump off for t minutes.
-//the pump is pretty fast at filling the growbed so it should only take 5 minutes to fill up. 
+//the pump is pretty fast at filling the growbed so it should only take 5 minutes to fill up.
 function pump() {
     var time = 35;
-    var on, off;
-    var iterator = function (t, stop) {
-        if (stop) {
-            clearTimeout(off);
-            clearTimeout(on);
+    var iterator = function () {
+        var date = new Date();
+        if (date.getMinutes() % time === 0) {
+            pumpPin.write(1);
+            off = setTimeout(function () { pumpPin.write(0);}, 420000)
         }
-        time = t;
-        pumpPin.write(1);
-         off = setTimeout(function () { pumpPin.write(0); }, 400000);
-         on = setTimeout(iterator, time * 60000, time, false);
+        setTimeout(iterator, 25000);
     };
-    return iterator;
+    return function (t) {
+        time = t;
+    };
 }
 
 
