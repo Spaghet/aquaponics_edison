@@ -124,6 +124,7 @@ function led() {
     sunrise = new Date(); sunset = new Date();
 
     var returnFunc = function (season) {
+        console.log(season);
         var cH, cM, sH, sM, rH, rM;
         if (timeout != null) {
             clearTimeout(timeout);
