@@ -160,7 +160,6 @@ function led() {
             riseTime = (sunrise.hour * 60) + sunrise.minute;
             
             var isSet = (currentDate >= setTime) || (currentDate < riseTime);
-            console.log(rH + ":"+rM+" "+sH+":"+sM);
             //LED is pulldown so 1 = off 0 = on
             if (isSet) {
                 ledPin.write(1);
@@ -188,7 +187,7 @@ function pump() {
         }
         time = t;
         pumpPin.write(1);
-         off = setTimeout(function () { pumpPin.write(0); }, 420000);
+         off = setTimeout(function () { pumpPin.write(0); }, 400000);
          on = setTimeout(iterator, time * 60000, time, false);
     };
     return iterator;
