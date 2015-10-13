@@ -121,25 +121,26 @@ function tempTest(){
 //Given the sunset/sunrise time, the led should turn on/off at that time. The LED relay is Normally Open, so 0 is on, 1 is off. 
 function led() {
     var sunrise, sunset, currentDate, timeout;
-    sunrise = new Date(); sunset = new Date();
-
+    var sunrise, sunset;
+    sunrise = { hour: 0, minute: 0 };
+    sunset = { hour: 0, minute: 0 };
     var returnFunc = function (season) {
-        var cH, cM, sH, sM, rH, rM;
+        console.log(season);
         if (timeout != null) {
             clearTimeout(timeout);
         }
         switch (season) {
             case "summer":
-                sunrise.setHours(4, 26,0,0);
-                sunset.setHours(19, 1,0,0);
+                sunrise = { hour: 4, minute: 26 };
+                sunset = { hour: 19, minute: 1 };
                 break;
             case "winter":
-                sunrise.setHours(6, 47,0,0);
-                sunset.setHours(16, 32,0,0);
+                sunrise = { hour: 6, minute: 47 };
+                sunset = { hour: 16, minute: 32 };
                 break;
             case "equinox":
-                sunrise.setHours(5, 35,0,0);
-                sunset.setHours(17, 45,0,0);
+                sunrise = { hour: 5, minute: 35 };
+                sunset = { hour: 17, minute: 45 };
                 break;
             case "on":
                 ledPin.write(0);
@@ -149,25 +150,17 @@ function led() {
                 ledPin.write(1);
                 return;
                 break;
-            case "summer":
-            case "winter":
-            case "equinox":
-                sH = sunset.getHours();
-                sM = sunset.getMinutes();
-                rH = sunrise.getHours();
-                rM = sunrise.getMinutes();
         }
 
         function iterator(){
             var setTime, riseTime;
             currentDate = new Date();
-            cH = currentDate.getHours();
-            cM = currentDate.getMinutes();
-            riseTime = (rH * 60) + rM;
-            setTime = (sH * 60) + sM;
-            currentDate = (cH * 60) + cM;
+            currentDate = (currentDate.getHours() * 60) + currentDate.getMinutes();
+            setTime = (sunset.hour * 60) + sunset.minute;
+            riseTime = (sunrise.hour * 60) + sunrise.minute;
             
             var isSet = (currentDate >= setTime) || (currentDate < riseTime);
+            console.log(rH + ":"+rM+" "+sH+":"+sM);
             //LED is pulldown so 1 = off 0 = on
             if (isSet) {
                 ledPin.write(1);
@@ -187,18 +180,18 @@ function led() {
 //the pump is pretty fast at filling the growbed so it should only take 5 minutes to fill up. 
 function pump() {
     var time = 35;
-    var iterator = function () {
-        var date = new Date();
-        if (date.getMinutes() % time === 0) {
-            pumpPin.write(1);
-            off = setTimeout(function () { pumpPin.write(0);}, 420000)
+    var on, off;
+    var iterator = function (t, stop) {
+        if (stop) {
+            clearTimeout(off);
+            clearTimeout(on);
         }
-        setTimeout(iterator, 25000);
-    };
-    return function (t) { 
         time = t;
+        pumpPin.write(1);
+         off = setTimeout(function () { pumpPin.write(0); }, 420000);
+         on = setTimeout(iterator, time * 60000, time, false);
     };
-    
+    return iterator;
 }
 
 

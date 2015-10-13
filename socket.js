@@ -16,7 +16,6 @@ var ioServer = function (server) {
         wSocket = socket;
         var feedInterval;
         socket.on("ledControl", function (data) {
-            console.log(data);
             mraa.led(data.toString());
         });
         socket.on("feedControl", function (data) {
