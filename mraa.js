@@ -168,6 +168,7 @@ function led() {
             currentDate = (cH * 60) + cM;
             
             var isSet = (currentDate >= setTime) || (currentDate < riseTime);
+            console.log(currentDate + " " + setTime + " " + riseTime);
             //LED is pulldown so 1 = off 0 = on
             if (isSet) {
                 ledPin.write(1);
@@ -187,24 +188,24 @@ function led() {
 //the pump is pretty fast at filling the growbed so it should only take 5 minutes to fill up. 
 function pump() {
     var time = 35;
-    var iterator = function () {
-        var date = new Date();
-        if (date.getMinutes() % time === 0) {
-            pumpPin.write(1);
-            off = setTimeout(function () { pumpPin.write(0);}, 420000)
+    var on, off;
+    var iterator = function (t, stop) {
+        if (stop) {
+            clearTimeout(off);
+            clearTimeout(on);
         }
-        setTimeout(iterator, 25000);
-    };
-    return function (t) { 
         time = t;
+        pumpPin.write(1);
+         off = setTimeout(function () { pumpPin.write(0); }, 420000);
+         on = setTimeout(iterator, time * 60000, time, false);
     };
-    
+    return iterator;
 }
 
 
 //export functions
 module.exports.feed = feed;
-module.exports.led = led();
+module.exports.led = led;
 module.exports.waterTemp = waterTemp;
 module.exports.tempTest = tempTest;
-module.exports.pump = pump();
+module.exports.pump = pump;
