@@ -169,7 +169,7 @@ function led() {
             currentDate = (cH * 60) + cM;
             
             var isSet = (currentDate >= setTime) || (currentDate < riseTime);
-            console.log(currentDate + " " + setTime + " " + riseTime);
+            console.log(rH + ":"+rM+" "+sH+":"+sM);
             //LED is pulldown so 1 = off 0 = on
             if (isSet) {
                 ledPin.write(1);
