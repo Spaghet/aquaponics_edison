@@ -178,15 +178,16 @@ function led() {
 //felt like writing a closure to implement  a timer that turns the pump on for 5 minutes and leaves pump off for t minutes.
 //the pump is pretty fast at filling the growbed so it should only take 5 minutes to fill up.
 function pump() {
-    var time = 35;
+    var time = 30;
     var iterator = function () {
         var date = new Date();
-        if (date.getMinutes() % time === 0) {
+        if (date.getMinutes() % time == 0) {
             pumpPin.write(1);
-            off = setTimeout(function () { pumpPin.write(0);}, 420000)
+            off = setTimeout(function () { pumpPin.write(0);}, 400000)
         }
         setTimeout(iterator, 25000);
     };
+    iterator();
     return function (t) {
         time = t;
     };
