@@ -183,7 +183,7 @@ function pump() {
         var date = new Date();
         if (date.getMinutes() % time == 0) {
             pumpPin.write(1);
-            off = setTimeout(function () { pumpPin.write(0);}, 400000)
+            off = setTimeout(function () { pumpPin.write(0);}, 360000)
         }
         setTimeout(iterator, 25000);
     };
